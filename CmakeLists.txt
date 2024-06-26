@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
-project (Engine)
+set(PROJECT_NAME Engine)
 
-add_executable(Engine src/main.cpp)
+project (${PROJECT_NAME})
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+
+add_subdirectory(external/glfw)
+
+target_link_libraries(${PROJECT_NAME} glfw)
