@@ -9,6 +9,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
+
+#include <vector>
+
 ResourceManager::ResourceManager(const std::string& executablePath)
 {
     size_t found = executablePath.find_last_of("/\\");
@@ -94,10 +97,11 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::getTextures(const std::str
 }
 
 std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string& spriteName,
-    const std::string& textureName,
-    const std::string& shaderName,
-    const unsigned int spriteWidth,
-    const unsigned int spriteHeight)
+                                                              const std::string& textureName,
+                                                              const std::string& shaderName,
+                                                              const unsigned int spriteWidth,
+                                                              const unsigned int spriteHeight,
+                                                              const std::string subTextureName)
 {
     auto pTexture = getTextures(textureName);
     if (!pTexture)
@@ -112,9 +116,10 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string&
     }
 
     std::shared_ptr<Renderer::Sprite> newSprite = m_sprites.emplace(textureName, std::make_shared<Renderer::Sprite>(pTexture,
-        pShader,
-        glm::vec2(0.f, 0.f),
-        glm::vec2(spriteWidth, spriteHeight))).first->second;
+                                                                                                                    subTextureName,
+                                                                                                                    pShader,
+                                                                                                                    glm::vec2(0.f, 0.f),
+                                                                                                                    glm::vec2(spriteWidth, spriteHeight))).first->second;
 
     return newSprite;
 }
@@ -128,4 +133,40 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const std::string& 
     }
     std::cerr << "Can't find the sprite: " << spriteName << std::endl;
     return nullptr;
+}
+
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(const std::string textureName,
+                                                      const std::string texturePath,
+                                                      const std::vector<std::string> subTextures,
+                                                      const unsigned int subTextureWidth,
+                                                      const unsigned int subTextureHeight)
+{
+
+    auto pTexture = loadTexture(std::move(textureName), std::move(texturePath));
+
+    if (pTexture)
+    {
+        const unsigned int textureWidth = pTexture->width();
+        const unsigned int textureHeight = pTexture->height();
+        unsigned int currentTextureOffsetX = 0;
+        unsigned int currentTextureOffsetY = textureHeight;
+        for (const auto& currentSubTextureName : subTextures)
+        {
+            glm::vec2 leftBottomUV(static_cast<float> (currentTextureOffsetX) / textureWidth,                 static_cast<float>(currentTextureOffsetY - subTextureHeight) / textureHeight);
+            glm::vec2 rightTopUV(static_cast<float> (currentTextureOffsetX + subTextureWidth) / textureWidth, static_cast<float>(currentTextureOffsetY) / textureHeight);
+        
+            pTexture->addSubTexture(std::move(currentSubTextureName), leftBottomUV, rightTopUV);
+
+            currentTextureOffsetX += subTextureWidth;
+            if (currentTextureOffsetX >= textureWidth)
+            {
+                currentTextureOffsetX = 0;
+                currentTextureOffsetY -= subTextureHeight;
+            }
+        }
+
+
+    }
+    return pTexture;
 }
