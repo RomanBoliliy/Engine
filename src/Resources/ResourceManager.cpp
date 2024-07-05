@@ -113,7 +113,6 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::getTextures(const std::str
     std::cerr << "Can't find the texture: " << textureName << std::endl;
     return nullptr;
 }
-
 std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string& spriteName,
                                                               const std::string& textureName,
                                                               const std::string& shaderName,
@@ -143,12 +142,12 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string&
 }
 
 std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string& spriteName,
-                                                              const std::string& textureName,
-                                                              const std::string& shaderName,
-                                                              const unsigned int spriteWidth,
-                                                              const unsigned int spriteHeight,
-                                                              const std::string subTextureName)
-{
+                                                                              const std::string& textureName,
+                                                                              const std::string& shaderName,
+                                                                              const unsigned int spriteWidth,
+                                                                              const unsigned int spriteHeight,
+                                                                              const std::string subTextureName)
+                {
     auto pTexture = getTextures(textureName);
     if (!pTexture)
     {
@@ -162,10 +161,10 @@ std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(co
     }
 
     std::shared_ptr<Renderer::AnimatedSprite> newSprite = m_animatedSprites.emplace(spriteName, std::make_shared<Renderer::AnimatedSprite>(pTexture,
-        subTextureName,
-        pShader,
-        glm::vec2(0.f, 0.f),
-        glm::vec2(spriteWidth, spriteHeight))).first->second;
+                                                                                                                                           subTextureName,
+                                                                                                                                           pShader,
+                                                                                                                                           glm::vec2(0.f, 0.f),
+                                                                                                                                           glm::vec2(spriteWidth, spriteHeight))).first->second;
 
     return newSprite;
 }
