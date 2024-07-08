@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Texture2D.h"
-namespace Renderer {
+namespace RenderEngine {
 
 	Texture2D::Texture2D(const GLuint width, GLuint height, 
 						 const unsigned char* data, 
