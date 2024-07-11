@@ -34,7 +34,7 @@ public:
 	static std::shared_ptr<RenderEngine::ShaderProgram> loadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath);
 	static std::shared_ptr<RenderEngine::ShaderProgram> getShaderProgram(const std::string& shaderName);
 	static std::shared_ptr<RenderEngine::Texture2D> loadTexture(const std::string& textureName, const std::string& texturePath);
-	static std::shared_ptr<RenderEngine::Texture2D> getTextures(const std::string& textureName);
+	static std::shared_ptr<RenderEngine::Texture2D> getTexture(const std::string& textureName);
 
 	static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprite(const std::string& SpriteName,
 																	    const std::string& textureName,
@@ -57,6 +57,8 @@ public:
 																  std::vector<std::string> subTextures,
 																  const unsigned int subTextureWidth,
 													  			  const unsigned int subTextureHeight);
+
+	static bool loadJSONResources(const std::string& JSONPath);
 
 private:
 
